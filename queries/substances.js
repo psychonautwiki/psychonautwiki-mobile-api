@@ -1,7 +1,9 @@
-export default = `
+module.exports = `
+{
 	substances(limit:300) {
 	    name
 	    url
+	    summary
 	    featured
 	    addictionPotential
 	    crossTolerance
@@ -22,4 +24,5 @@ export default = `
 	        url
 	    }
 	}
-` 
+}
+`;

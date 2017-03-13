@@ -1,41 +1,18 @@
 const express = require('express');
 const router = express.Router();
 
-const Lokka = require('lokka').Lokka;
-const Transport = require('lokka-transport-http').Transport;
-
-const client = new Lokka({
-  transport: new Transport('https://api.psychonautwiki.org/')
-});
+const substancesFactory = require('../factorys/substances');
 
 /* GET substances */
 router.get('/', function(req, res, next) {
-  client.query(`
-		substances(limit:300) {
-        name
-        url
-        featured
-        addictionPotential
-        crossTolerance
-        dangerousInteraction {
-            name
-        }
-        class {
-            chemical
-            psychoactive
-        }
-        tolerance {
-            full
-            half
-            zero
-        }
-        effects {
-            name
-            url
-        }
-    }
-	`).then(result => {
-	    res.json(result);
+	substancesFactory.getSubstances().then(result => {
+		res.json(result);
+	}).catch(err => {
+		if (req.xhr) {
+			res.status(500).send({ error: 'Something failed!' });
+		} else {
+			next(err);
+		}
 	});
 });
 
